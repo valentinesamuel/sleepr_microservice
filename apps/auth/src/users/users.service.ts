@@ -17,7 +17,7 @@ export class UsersService {
     const user = this.usersRepository.findOne({ email });
     const passwordIsValid = bcrypt.compare(password, (await user).password);
     if (!passwordIsValid) {
-      throw new UnauthorizedException('Credentials are not valud');
+      throw new UnauthorizedException('Credentials are not valid');
     }
     return user;
   }
