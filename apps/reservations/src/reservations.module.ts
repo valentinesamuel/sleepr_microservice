@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { ReservationsController } from './reservations.controller';
-import { DatabaseModule, LoggerModule } from '@app/common';
+import { DatabaseModule, LoggerModule, AUTH_SERVICE } from '@app/common';
 import { ReservationsRepository } from './reservations.repository';
 import {
   ReservationDocument,
@@ -9,6 +9,7 @@ import {
 } from './models/reservation.schema';
 import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -27,6 +28,12 @@ import { ConfigModule } from '@nestjs/config';
         PORT: Joi.number().required(),
       }),
     }),
+    ClientsModule.register([
+      {
+        name: AUTH_SERVICE,
+        transport: Transport.TCP,
+      },
+    ]),
   ],
   controllers: [ReservationsController],
   providers: [ReservationsService, ReservationsRepository],
