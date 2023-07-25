@@ -15,15 +15,6 @@ import { LoggerModule } from '@app/common';
       }),
     }),
     LoggerModule,
-    // JwtModule.registerAsync({
-    //   useFactory: (configService: ConfigService) => ({
-    //     secret: configService.get<string>('JWT_SECRET'),
-    //     signOptions: {
-    //       expiresIn: `${configService.get('JWT_EXPIRATION')}s`,
-    //     },
-    //   }),
-    //   inject: [ConfigService],
-    // }),
   ],
   controllers: [PaymentsController],
   providers: [PaymentsService],
