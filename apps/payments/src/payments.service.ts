@@ -35,7 +35,10 @@ export class PaymentsService {
       currency: 'ngn',
     });
 
-    this.notificationsService.emit('notify_email', { email });
+    this.notificationsService.emit('notify_email', {
+      email,
+      text: `Your payment of NGN ${amount} has been completed successfully`,
+    });
 
     return paymentIntent;
   }
