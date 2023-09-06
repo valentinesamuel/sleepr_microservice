@@ -3,11 +3,26 @@ import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 import * as Joi from 'joi';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { LoggerModule, NOTIFICATIONS_SERVICE } from '@app/common';
+import {
+  DatabaseModule,
+  LoggerModule,
+  NOTIFICATIONS_SERVICE,
+} from '@app/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
+    ConfigModule,
+    DatabaseModule.forRoot({
+      type: 'postgres',
+      host: process.env.RESERVATIONS_DB_HOST, // Adjust environment variable names accordingly
+      port: parseInt(process.env.RESERVATIONS_DB_PORT, 10),
+      username: process.env.RESERVATIONS_DB_USERNAME,
+      password: process.env.RESERVATIONS_DB_PASSWORD,
+      database: process.env.RESERVATIONS_DB_DATABASE,
+      autoLoadEntities: true,
+    }),
+    DatabaseModule.forFeature([]),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({

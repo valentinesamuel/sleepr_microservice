@@ -1,3 +1,4 @@
+version: '3'
 services:
   reservations:
     build:
@@ -11,6 +12,11 @@ services:
       - '3000:3000'
     volumes:
       - .:/usr/src/app
+    networks:
+      - app_network
+    depends_on:
+      - reservations_db
+
   auth:
     build:
       context: .
@@ -23,6 +29,11 @@ services:
       - '3001:3001'
     volumes:
       - .:/usr/src/app
+    networks:
+      - app_network
+    depends_on:
+      - auth_db
+
   payments:
     build:
       context: .
@@ -33,6 +44,11 @@ services:
       - ./apps/payments/.env
     volumes:
       - .:/usr/src/app
+    networks:
+      - app_network
+    depends_on:
+      - payments_db
+
   notifications:
     build:
       context: .
@@ -43,5 +59,52 @@ services:
       - ./apps/notifications/.env
     volumes:
       - .:/usr/src/app
-  mongo:
-    image: mongo
+    networks:
+      - app_network
+    depends_on:
+      - notifications_db
+
+  reservations_db:
+    image: postgres
+    environment:
+      POSTGRES_DB: reservations_db
+      POSTGRES_USER: reservations_user
+      POSTGRES_PASSWORD: reservations_password
+    networks:
+      - app_network
+
+  auth_db:
+    image: postgres
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_password
+    networks:
+      - app_network
+
+  payments_db:
+    image: postgres
+    environment:
+      POSTGRES_DB: payments_db
+      POSTGRES_USER: payments_user
+      POSTGRES_PASSWORD: payments_password
+    networks:
+      - app_network
+
+  notifications_db:
+    image: postgres
+    environment:
+      POSTGRES_DB: notifications_db
+      POSTGRES_USER: notifications_user
+      POSTGRES_PASSWORD: notifications_password
+    networks:
+      - app_network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+networks:
+  app_network:

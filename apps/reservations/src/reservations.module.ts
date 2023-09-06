@@ -14,6 +14,7 @@ import {
 } from './models/reservation.schema';
 import * as Joi from 'joi';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Reservation } from './models/reservation.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({

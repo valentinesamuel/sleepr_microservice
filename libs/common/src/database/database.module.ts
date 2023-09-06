@@ -1,20 +1,21 @@
-import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { ModelDefinition, MongooseModule } from '@nestjs/mongoose';
+import { DynamicModule, Module } from '@nestjs/common';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 
-// TODO: Change to sql and typeorm
-@Module({
-  imports: [
-    MongooseModule.forRootAsync({
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get('MONGODB_URI'),
-      }),
-      inject: [ConfigService],
-    }),
-  ],
-})
+@Module({})
 export class DatabaseModule {
-  static forFeature(models: ModelDefinition[]) {
-    return MongooseModule.forFeature(models);
+  static forRoot(options: TypeOrmModuleOptions): DynamicModule {
+    return {
+      module: DatabaseModule,
+      imports: [
+        TypeOrmModule.forRoot({
+          ...options,
+        }),
+      ],
+    };
+  }
+
+  static forFeature(entities: EntityClassOrSchema[]): DynamicModule {
+    return TypeOrmModule.forFeature(entities);
   }
 }
